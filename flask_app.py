@@ -1,22 +1,26 @@
 import os
 from flask import Flask
 from flask_restful import Api, Resource, reqparse
-import datetime
+from datetime import datetime, timedelta
+from math import floor
 
 app = Flask(__name__)
 api = Api(app)
 
 ### GENERAL ###
-bigFormat = "%Y-%m-%d-%H"
+bigFormat = "%Y-%m-%d-%H-%M"
+maxTimeUnits = 5
+maxTimeRecord = 5 * 60 * 1000#1 * 60 * 60 * 24
+maxOnOffTimes = 5 #4 * 24
 
 locations = {
      "Central Tech TDSB - Service Location": {
           "club" : "Toronto Kiwanis Boys and Girls Clubs",
           "address": "725 Bathurst Street\nToronto, ON M5S 2R5",
           "website": "http://www.believeinkids.ca",
-          "code": "UnplugToConnect",
+          "code": "UTC",
           "log": {
-               datetime.datetime.now().strftime(bigFormat): {
+               datetime.now().strftime(bigFormat): {
                     "total" : 10000,
                     "times" : 1
                }
@@ -30,7 +34,7 @@ users = {
             "Central Tech TDSB - Service Location"
         ],
         "log": {
-            datetime.datetime.now().strftime(bigFormat): {
+            datetime.now().strftime(bigFormat): {
                 "total" : 10000,
                 "times" : 1
             }
@@ -73,7 +77,7 @@ class Users(Resource):
           location = args["location"]
           loggedTime = int(args["time"])
 
-          bigTime = datetime.datetime.now().strftime(bigFormat)
+          bigTime = datetime.now().strftime(bigFormat)
 
           if (location not in locations):
                locations[location] = {
@@ -99,9 +103,28 @@ class Users(Resource):
 ### PETS ###
 
 def calculatePetHealth(user):
+     log = user["log"]
+     now = datetime.now()
+     onlineTime = 0
+     times = 0
+
+     if (now.strftime(bigFormat) in log):
+          onlineTime += log[now.strftime(bigFormat)]["total"]
+          times += log[now.strftime(bigFormat)]["times"]
+
+     for x in range(1, maxTimeUnits):
+          tmpTime = now - timedelta(minutes=x)
+          if (tmpTime.strftime(bigFormat) in log):
+               onlineTime += log[tmpTime.strftime(bigFormat)]["total"]
+               times += log[now.strftime(bigFormat)]["times"]
+
+     mood = round(100 * onlineTime/maxTimeRecord, 0)
+
+     temperment = round(min(100, 100 * times/maxOnOffTimes), 0)
+
      return {
-          "mood": 0,
-          "temperment": 0
+          "mood": mood,
+          "temperment": temperment
      }
 
 class Pets(Resource):
