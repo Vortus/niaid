@@ -10,8 +10,7 @@ bigFormat = "%Y-%m-%d-%H"
 
 clubs = {
     "Toronto Central": {
-        "latitude": 0,
-        "longitude": 0,
+        "address": "test"
         "log": {
             datetime.datetime.now().strftime(bigFormat): {
                 "total" : 10000,
@@ -66,11 +65,7 @@ class TimeLog(Resource):
         bigTime = datetime.datetime.now().strftime(bigFormat)
 
         if (club not in clubs):
-            clubs[club] = {
-                "latitude": 0,
-                "longitude": 0,
-                "log": {}
-            }
+            return "club does not exist!", 400
 
         addTimeToLog(clubs[club]["log"], bigTime, loggedTime)
 
@@ -95,7 +90,7 @@ class ClubLog(Resource):
         if (club in clubs):
             return clubs[club], 200
         else:
-            "club doesn't exist!", 202
+            "club doesn't exist!", 400
 
 api.add_resource(ClubLog, "/log/club")
 
@@ -108,7 +103,7 @@ class UserLog(Resource):
         if (name in users):
             return users[name], 200
         else:
-            "club doesn't exist!", 202
+            "user doesn't exist!", 202
 
 api.add_resource(UserLog, "/log/user")
 
