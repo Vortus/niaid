@@ -1,5 +1,5 @@
 import os
-from flask import Flask, send_file
+from flask import Flask, Response
 from flask_restful import Api, Resource, reqparse
 from datetime import datetime, timedelta
 from math import floor
@@ -174,10 +174,11 @@ def getData():
                total = total + loc["log"][item]["total"]
           totalInMinute = floor(total / (1000 * 60))
           data = data + "{0},{1},{2}\n".format(location, club, totalInMinute)
-     with open("data.csv", "w+") as f:
-          f.write(data)
-          return send_file("data.csv")
-     return "Could not generate data", 200
+     return Response(
+          data,
+          mimetype="text/csv",
+          headers={"Content-disposition": "attachment; filename=data.csv"}
+     )
 
 ### FLASK SETUP ###
 api.add_resource(Pets, "/pets")
