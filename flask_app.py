@@ -88,7 +88,7 @@ class Users(Resource):
 
           addTimeToLog(locations[location]["log"], bigTime, loggedTime)
 
-          if (name not in users):
+          if (not name in users):
                users[name] = {
                     "locations": [
                     location
