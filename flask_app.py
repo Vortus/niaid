@@ -133,10 +133,10 @@ class Locations(Resource):
           parser = reqparse.RequestParser()
           parser.add_argument("code")
           args = parser.parse_args()
-          code = args["location"]
+          code = args["code"]
           for location in locations:
                if (locations[location]["code"] == code):
-                    return locations[location], 200
+                    return location, 200
           return "Code invalid!", 202
 
 ### FLASK SETUP ###
