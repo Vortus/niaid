@@ -12,8 +12,8 @@ bigFormat = "%Y-%m-%d-%H"
 
 clubs = {
     "Toronto Central": {
-        "latitude": 0,
-        "longitude": 0,
+        "address": "test address",
+        "code": "UnplugToConnect",
         "log": {
             datetime.datetime.now().strftime(bigFormat): {
                 "total" : 10000,
@@ -103,31 +103,41 @@ def calculatePetHealth(user):
 
 class PetStatus(Resource):
     def get(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument("name")
-        args = parser.parse_args()
+          parser = reqparse.RequestParser()
+          parser.add_argument("name")
+          args = parser.parse_args()
 
-        name = args["name"]
+          name = args["name"]
 
-        if (name in users):
-            return calculatePetHealth(users[name])
-        else:
-            return "user doesn't exist!", 202
+          if (name in users):
+               return calculatePetHealth(users[name])
+          else:
+               return "user doesn't exist!", 202
 
 
 setup_api(api)
 
 ### CLUBS ###
 class ClubLog(Resource):
-    def get(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument("club")
-        args = parser.parse_args()
-        club = args["club"]
-        if (club in clubs):
-            return clubs[club], 200
-        else:
-            "club doesn't exist!", 202
+     def get(self):
+          parser = reqparse.RequestParser()
+          parser.add_argument("club")
+          args = parser.parse_args()
+          club = args["club"]
+          if (club in clubs):
+               return clubs[club], 200
+          else:
+               "club doesn't exist!", 202
+
+     def post(self):
+          parser = reqparse.RequestParser()
+          parser.add_argument("code")
+          args = parser.parse_args()
+          code = args["code"]
+          for club in clubs:
+               if (clubs[club]["code"] == code):
+                    return club, 200
+          return "Code invalid!", 202
 
 ### FLASK SETUP ###
 api.add_resource(PetStatus, "/pet/status")
