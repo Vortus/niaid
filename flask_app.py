@@ -10,7 +10,7 @@ bigFormat = "%Y-%m-%d-%H"
 
 clubs = {
     "Toronto Central": {
-        "address": "test"
+        "address": "test",
         "log": {
             datetime.datetime.now().strftime(bigFormat): {
                 "total" : 10000,
