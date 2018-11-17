@@ -163,7 +163,7 @@ class Locations(Resource):
           return "Code invalid!", 202
 
 ### DATA ###
-@app.route("/data.csv")
+@app.route("/data")
 def getData():
      data = "Location,Club,Total time offline in mins\n"
      for location in locations:
