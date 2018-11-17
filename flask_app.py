@@ -180,6 +180,12 @@ def getData():
           headers={"Content-disposition": "attachment; filename=data.csv"}
      )
 
+@app.route("/data/clear", methods=['POST'])
+def clearData():
+     for user in users:
+          users[user]["log"] = {}
+     return "Data cleared!", 200
+
 ### FLASK SETUP ###
 api.add_resource(Pets, "/pets")
 api.add_resource(Users, "/users")
