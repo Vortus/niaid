@@ -1,5 +1,5 @@
 import os
-from flask import Flask
+from flask import Flask, send_file
 from flask_restful import Api, Resource, reqparse
 from datetime import datetime, timedelta
 from math import floor
@@ -163,24 +163,26 @@ class Locations(Resource):
           return "Code invalid!", 202
 
 ### DATA ###
-class Data(Resource):
-     def get(self):
-          data = "Location,Club,Total time offline in mins\n"
-          for location in locations:
-               loc = locations[location]
-               club = loc["club"]
-               total = 0
-               for item in loc["log"]:
-                    total = total + loc["log"][item]["total"]
-               totalInMinute = floor(total / (1000 * 60))
-               data = data + "{0},{1},{2}\n".format(location,club,totalInMinute)
-          return data, 200
+@app.route("/data.csv")
+def getData():
+     data = "Location,Club,Total time offline in mins\n"
+     for location in locations:
+          loc = locations[location]
+          club = loc["club"]
+          total = 0
+          for item in loc["log"]:
+               total = total + loc["log"][item]["total"]
+          totalInMinute = floor(total / (1000 * 60))
+          data = data + "{0},{1},{2}\n".format(location, club, totalInMinute)
+     with open("data.csv", "w+") as f:
+          f.write(data)
+          return send_file("data.csv")
+     return "Could not generate data", 200
 
 ### FLASK SETUP ###
 api.add_resource(Pets, "/pets")
 api.add_resource(Users, "/users")
 api.add_resource(Locations, "/locations")
-api.add_resource(Data, "/data")
 
 if __name__ == '__main__':
      app.debug = True
