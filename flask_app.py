@@ -21,7 +21,7 @@ locations = {
           "code": "UTC",
           "log": {
                datetime.now().strftime(bigFormat): {
-                    "total" : 10000,
+                    "total" : 145023200,
                     "times" : 1
                }
           }
@@ -140,7 +140,7 @@ class Pets(Resource):
           else:
                return "user doesn't exist!", 202
 
-### CLUBS ###
+### LOCATIONS ###
 class Locations(Resource):
      def get(self):
           parser = reqparse.RequestParser()
@@ -162,10 +162,25 @@ class Locations(Resource):
                     return location, 200
           return "Code invalid!", 202
 
+### DATA ###
+class Data(Resource):
+     def get(self):
+          data = "Location,Club,Total time offline in mins\n"
+          for location in locations:
+               loc = locations[location]
+               club = loc["club"]
+               total = 0
+               for item in loc["log"]:
+                    total = total + loc["log"][item]["total"]
+               totalInMinute = floor(total / (1000 * 60))
+               data = data + "{0},{1},{2}\n".format(location,club,totalInMinute)
+          return data, 200
+
 ### FLASK SETUP ###
 api.add_resource(Pets, "/pets")
 api.add_resource(Users, "/users")
 api.add_resource(Locations, "/locations")
+api.add_resource(Data, "/data")
 
 if __name__ == '__main__':
      app.debug = True
