@@ -2,7 +2,6 @@ import os
 from flask import Flask
 from flask_restful import Api, Resource, reqparse
 import datetime
-from src.niaid.niaid import setup_api
 
 app = Flask(__name__)
 api = Api(app)
@@ -113,9 +112,6 @@ class PetStatus(Resource):
                return calculatePetHealth(users[name])
           else:
                return "user doesn't exist!", 202
-
-
-setup_api(api)
 
 ### CLUBS ###
 class ClubLog(Resource):
