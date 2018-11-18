@@ -5,6 +5,7 @@ from flask_cors import CORS
 from datetime import datetime, timedelta
 from math import floor
 import json
+import pytz
 
 app = Flask(__name__)
 api = Api(app)
@@ -3796,10 +3797,6 @@ users = {
             "Central Tech TDSB - Service Location"
         ],
         "log": {
-            datetime.now().strftime(bigFormat): {
-                "total" : 10000,
-                "times" : 1
-            }
         }
     }
 }
@@ -3839,7 +3836,7 @@ class Users(Resource):
           location = args["location"]
           loggedTime = int(args["time"])
 
-          bigTime = datetime.now().strftime(bigFormat)
+          bigTime = datetime.now(pytz.utc).strftime(bigFormat)
 
           if (location not in locations):
                locations[location] = {
@@ -3866,7 +3863,7 @@ class Users(Resource):
 
 def calculatePetHealth(user):
      log = user["log"]
-     now = datetime.now()
+     now = datetime.now(pytz.utc)
      offlineTime = 0
      times = 0
 
