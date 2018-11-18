@@ -116,7 +116,7 @@ def calculatePetHealth(user):
           tmpTime = now - timedelta(minutes=x)
           if (tmpTime.strftime(bigFormat) in log):
                onlineTime += log[tmpTime.strftime(bigFormat)]["total"]
-               times += log[now.strftime(bigFormat)]["times"]
+               times += log[tmpTime.strftime(bigFormat)]["times"]
 
      mood = round(100 * onlineTime/maxTimeRecord, 0)
 
