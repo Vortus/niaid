@@ -3,6 +3,7 @@ from flask import Flask, Response
 from flask_restful import Api, Resource, reqparse
 from datetime import datetime, timedelta
 from math import floor
+import json
 
 app = Flask(__name__)
 api = Api(app)
@@ -165,20 +166,42 @@ class Locations(Resource):
 ### DATA ###
 @app.route("/data")
 def getData():
-     data = "Location,Club,Total time offline in mins\n"
-     for location in locations:
-          loc = locations[location]
-          club = loc["club"]
-          total = 0
-          for item in loc["log"]:
-               total = total + loc["log"][item]["total"]
-          totalInMinute = floor(total / (1000 * 60))
-          data = data + "{0},{1},{2}\n".format(location, club, totalInMinute)
-     return Response(
-          data,
-          mimetype="text/csv",
-          headers={"Content-disposition": "attachment; filename=data.csv"}
-     )
+     parser = reqparse.RequestParser()
+     parser.add_argument("return")
+     args = parser.parse_args()
+
+     if args["return"] == "csv":
+          data = []
+          for location in locations:
+               loc = locations[location]
+               club = loc["club"]
+               total = 0
+               for item in loc["log"]:
+                    total = total + loc["log"][item]["total"]
+               totalInMinute = floor(total / (1000 * 60))
+               data.append(
+                    {
+                         "location": location,
+                         "club": club,
+                         "timeOffline": totalInMinute
+                    }
+               )
+          return json.dumps(data), 400
+     else:
+          data = "Location,Club,Total time offline in mins\n"
+          for location in locations:
+               loc = locations[location]
+               club = loc["club"]
+               total = 0
+               for item in loc["log"]:
+                    total = total + loc["log"][item]["total"]
+               totalInMinute = floor(total / (1000 * 60))
+               data = data + "{0},{1},{2}\n".format(location, club, totalInMinute)
+          return Response(
+               data,
+               mimetype="text/csv",
+               headers={"Content-disposition": "attachment; filename=data.csv"}
+          )
 
 @app.route("/data/clear", methods=['POST'])
 def clearData():
