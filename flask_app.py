@@ -23,10 +23,6 @@ locations = {
           "website": "http://www.believeinkids.ca",
           "code": "UTC",
           "log": {
-               datetime.now().strftime(bigFormat): {
-                    "total" : 145023200,
-                    "times" : 1
-               }
           }
     }
 }
@@ -3982,9 +3978,10 @@ def getData():
 
 @app.route("/data/clear", methods=['POST'])
 def clearData():
-     for user in users:
-          users[user]["log"] = {}
-     return "Data cleared!", 200
+      for user in users:
+        users[user]["log"] = {}
+      locations["Central Tech TDSB - Service Location"]["log"] = {}
+      return "Data cleared!", 200
 
 ### FLASK SETUP ###
 api.add_resource(Pets, "/pets")
