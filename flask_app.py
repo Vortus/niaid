@@ -3877,7 +3877,7 @@ def calculatePetHealth(user):
                offlineTime += log[tmpTime.strftime(bigFormat)]["total"]
                times += log[tmpTime.strftime(bigFormat)]["times"]
 
-     mood = round(100 * offlineTime/maxTimeRecord, 0)
+     mood = round(100 * min(100, offlineTime/maxTimeRecord), 0)
 
      temperment = round(100 - min(100, 100 * times/maxOnOffTimes), 0)
 
