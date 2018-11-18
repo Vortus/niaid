@@ -170,7 +170,7 @@ def getData():
      parser.add_argument("return")
      args = parser.parse_args()
 
-     if args["return"] == "csv":
+     if args["return"] == "json":
           data = []
           for location in locations:
                loc = locations[location]
