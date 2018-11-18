@@ -3869,22 +3869,22 @@ class Users(Resource):
 def calculatePetHealth(user):
      log = user["log"]
      now = datetime.now()
-     onlineTime = 0
+     offlineTime = 0
      times = 0
 
      if (now.strftime(bigFormat) in log):
-          onlineTime += log[now.strftime(bigFormat)]["total"]
+          offlineTime += log[now.strftime(bigFormat)]["total"]
           times += log[now.strftime(bigFormat)]["times"]
 
      for x in range(1, maxTimeUnits):
           tmpTime = now - timedelta(minutes=x)
           if (tmpTime.strftime(bigFormat) in log):
-               onlineTime += log[tmpTime.strftime(bigFormat)]["total"]
+               offlineTime += log[tmpTime.strftime(bigFormat)]["total"]
                times += log[tmpTime.strftime(bigFormat)]["times"]
 
-     mood = round(100 * onlineTime/maxTimeRecord, 0)
+     mood = round(100 * offlineTime/maxTimeRecord, 0)
 
-     temperment = round(min(100, 100 * times/maxOnOffTimes), 0)
+     temperment = round(100 - min(100, 100 * times/maxOnOffTimes), 0)
 
      return {
           "mood": mood,
