@@ -11,7 +11,7 @@ api = Api(app)
 ### GENERAL ###
 bigFormat = "%Y-%m-%d-%H-%M"
 maxTimeUnits = 5
-maxTimeRecord = 5 * 60 * 1000#1 * 60 * 60 * 24
+maxTimeRecord = 6 * 60 * 1000#1 * 60 * 60 * 24
 maxOnOffTimes = 10 #4 * 24
 
 locations = {
