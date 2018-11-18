@@ -3913,7 +3913,7 @@ class Locations(Resource):
           parser.add_argument("location")
           args = parser.parse_args()
           location = args["location"]
-          location.replace("_", " ")
+          location = location.replace("_", " ")
 
           if (location in locations):
                return locations[location], 200
