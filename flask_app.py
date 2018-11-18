@@ -1,12 +1,14 @@
 import os
 from flask import Flask, Response
 from flask_restful import Api, Resource, reqparse
+from flask_cors import CORS
 from datetime import datetime, timedelta
 from math import floor
 import json
 
 app = Flask(__name__)
 api = Api(app)
+CORS(app)
 
 ### GENERAL ###
 bigFormat = "%Y-%m-%d-%H-%M"
