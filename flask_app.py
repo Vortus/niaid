@@ -8,7 +8,7 @@ import json
 
 app = Flask(__name__)
 api = Api(app)
-CORS(app)
+CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 ### GENERAL ###
 bigFormat = "%Y-%m-%d-%H-%M"
